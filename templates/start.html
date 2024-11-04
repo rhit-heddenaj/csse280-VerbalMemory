@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Verbal Memory Test</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="styles/start.css">
+    </head>
+    <body>
+        <div id="container">
+            <h1>Verbal Memory Test</h1>
+            <br>
+            <div id="desc">
+                <h2>How it works</h2>
+                <p>You will be shown a series of words. If the current word has appeared in this session, 
+                    click the button “SEEN” for an extra point. If you have not seen the word in this session, 
+                    click the button “NEW” for an extra point. After three mistakes, 
+                    the game is over and your score is saved.</p>
+            </div>
+
+            <div id="buttons">
+                <form method="GET" action="/words/">
+                    <button id="start" class="button">Start</button>
+                </form>
+                <button id="leader" class="button">Leaderboard</button>
+            </div>
+        </div>
+        
+        
+        <script src="scripts/start.js" async defer></script>
+    </body>
+</html>
