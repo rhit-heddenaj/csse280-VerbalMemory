@@ -35,7 +35,7 @@ possible_words = random_words = [
     "discovery", "equilibrium", "fascination", "generosity", "humility", "innovation",
     "justice", "knowledge", "legacy", "maturity", "nobility", "openness", "patience",
     "quality", "respect", "sincerity", "tenacity", "understanding", "versatility",
-    "wisdom"
+    "wisdom", "floccinaucinihilipilification"
 ]
 
 seen_words =[]
