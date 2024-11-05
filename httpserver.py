@@ -45,7 +45,7 @@ possible_words = random_words = [
     "justice", "knowledge", "legacy", "maturity", "nobility", "openness", "patience",
     "quality", "respect", "sincerity", "tenacity", "understanding", "versatility",
     "wisdom", "floccinaucinihilipilification", "gubernatorial", "lobotomy", "disestablishementarism", "unaltered", 
-    "irredescant", "shrimp"
+    "irredescant"
 ]
 
 seen_words =[]
