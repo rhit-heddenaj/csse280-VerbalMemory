@@ -7,6 +7,15 @@ import random
 
 app = Flask(__name__ , static_url_path="", static_folder="templates")
 
+# By Thursday
+    # Leaderboard, profile picture
+    # Figure out what do with React
+    # Log in page (username, password, optional profile picture)
+    # possible words db, seen words db, username-to-(password & pfp) db
+    # (extra) More leaderboard, update the page whenever you pass someone else's high score
+    #       (i.e "You have beaten Jack's high score of 18!"" When you get a score of 19)
+    # (extra) Logo
+
 
 possible_words = random_words = [
     "apple", "banana", "cherry", "date", "elderberry", "fig", "grape", "honeydew",
@@ -36,23 +45,29 @@ possible_words = random_words = [
     "justice", "knowledge", "legacy", "maturity", "nobility", "openness", "patience",
     "quality", "respect", "sincerity", "tenacity", "understanding", "versatility",
     "wisdom", "floccinaucinihilipilification", "gubernatorial", "lobotomy", "disestablishementarism", "unaltered", 
-    "irredescant"
+    "irredescant", "shrimp"
 ]
 
 seen_words =[]
+lives = 3
+score = 0
 
-db = pickledb.load('words_list.db', True)
-list_name = "uploaded_words"
-if not db.get(list_name):
-    db.lcreate(list_name)
+db1 = pickledb.load("possible_words.db", True)
+list1_name = "possible_words"
+if not db1.get(list1_name):
+    db1.lcreate(list1_name)
+
+
 
 
 @app.route("/", methods=["GET"])
 def startGame():
-    return render_template("start.html")  # Got from in class lab
+    lives = 3
+    score = 0
+    seen_words =[]
+    return render_template("login.html")  # Got from in class lab
 
-lives = 3
-score = 0
+
 @app.route('/words/', methods=['GET', 'POST'])
 def upload_word():
     global lives  # Declare as global to modify them if needed, got from https://www.w3schools.com/python/python_variables_global.asp

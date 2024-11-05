@@ -1,0 +1,35 @@
+h1 { 
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    margin: 0px;
+    right: 0px;
+    text-align: left; 
+    background-color: #800000; 
+    font-size: 36px; 
+    padding: 16px; 
+    width: 100%; 
+    color: white;
+}
+
+#username{
+    display: flex;
+    color: black;
+    margin-top: 100px;
+}
+
+#password {
+    display: flex;
+    color: black;
+    margin-top: 100px;
+}
+
+#namebox {
+    margin: 15px;
+    width: 200px;
+}
+
+#passbox {
+    margin: 15px;
+    width: 200px;
+}
