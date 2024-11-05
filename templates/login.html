@@ -7,31 +7,30 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Verbal Memory\ Login</title>
+        <title>Verbal Memory Login</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="styles/login.css">
     </head>
     <body>
-        <div id="container">
+        <form method="GET" action="/words/">
             <h1>Verbal Memory Login Page</h1>
             <br>
-            <div id="username">
+            <div id="name">
                 <h2><label for username>Enter your Username:</label></h2>
                 <input id="namebox" name="username" placeholder="Enter your name" minlength = "3" maxlength="20" required>
             </div>
 
-            <div id="password">
+            <div id="pass">
                 <h2><label for password>Enter your Password:</label></h2>
                 <input id="passbox" name="password" placeholder="Enter your password" minlength="7" maxlength="20" required>
             </div>
 
-            <form method="GET" action="/">
-                <button id="continue">Continue</button>
-            </form>
-
-        </div>
+            <div id="button">
+                <button type="submit" id="continue">Continue</button>
+            </div>
+        </form>
         
-        <script src="" async defer></script>
+        <script src="scripts/login.js" async defer></script>
     </body>
 </html>

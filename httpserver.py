@@ -57,7 +57,15 @@ list1_name = "possible_words"
 if not db1.get(list1_name):
     db1.lcreate(list1_name)
 
+db2 = pickledb.load("passwords.db", True)
+list2_name = "all_players"
+if not db2.get(list2_name):
+    db2.lcreate(list2_name)
 
+db3 = pickledb.load("leaderboard.db", True)
+list3_name = "name_scores"
+if not db3.get(list3_name):
+    db3.lcreate(list3_name)
 
 
 @app.route("/", methods=["GET"])
@@ -65,7 +73,7 @@ def startGame():
     lives = 3
     score = 0
     seen_words =[]
-    return render_template("login.html")  # Got from in class lab
+    return render_template("start.html")  # Got from in class lab
 
 
 @app.route('/words/', methods=['GET', 'POST'])
@@ -75,8 +83,6 @@ def upload_word():
     if request.method == 'POST':
         action = request.form.get("action")
         lastWord = request.form.get("word")
-        # print("last word: " + lastWord)
-        # print("all seen words: " + str(seen_words))
         if (lastWord in seen_words and action=="new"):
             lives -= 1
         elif (lastWord in seen_words and action=="seen"):
@@ -107,6 +113,13 @@ def upload_word():
         
         return render_template("play.html", response=response)
     else:
+        username = request.args.get("username")
+        password = request.args.get("password")
+        if (username not in db2.lgetall(list2_name)):
+            db2.ladd(list2_name, username)
+            db2.set(username, password)
+        else:
+            print("User already in db")
         rando = random.randint(0, len(possible_words) - 1)
         word = possible_words[rando]
         response = {
