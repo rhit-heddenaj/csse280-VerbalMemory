@@ -76,10 +76,10 @@ seen_words =[]
 lives = 3
 score = 0
 
-db1 = pickledb.load("possible_words.db", True)
-list1_name = "possible_words"
-if not db1.get(list1_name):
-    db1.lcreate(list1_name)
+# db1 = pickledb.load("possible_words.db", True)
+# list1_name = "possible_words"
+# if not db1.get(list1_name):
+#     db1.lcreate(list1_name)
 
 db2 = pickledb.load("passwords.db", True)
 list2_name = "all_players"
@@ -123,7 +123,7 @@ def upload_word():
         if (len(seen_words) > 2):
             rando2 = random.uniform(0, 1)   # Got random.uniform from https://stackoverflow.com/questions/6088077/how-to-get-a-random-number-between-a-float-range
         if (len(seen_words) > 10):
-            rando2 = random.uniform(0.4, 1)
+            rando2 = random.uniform(0.5, 1)
         if (rando2 > 0.75):
             rando3 = random.randint(0, len(seen_words) -1)
             word = seen_words[rando3]
@@ -160,8 +160,11 @@ def upload_word():
         
         return render_template("play.html", response=response)
     else:
-        username = request.args.get("username")
-        password = request.args.get("password")
+        try:
+            username = request.args.get("username")
+            password = request.args.get("password")
+        except("TypeError"):
+            print("same username: " + str(username))
         if (username not in db2.lgetall(list2_name)):
             db2.ladd(list2_name, username)
             db3.ladd(list3_name, username)
@@ -177,6 +180,7 @@ def upload_word():
             "score": score
         }
         return render_template("play.html", response=response)
+
 
     
 if __name__ == "__main__":

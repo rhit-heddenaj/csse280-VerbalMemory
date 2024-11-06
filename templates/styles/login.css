@@ -1,4 +1,6 @@
-
+body {
+    background-color: lightgray;
+}
 
 h1 { 
     position: absolute;
@@ -18,12 +20,14 @@ h1 {
     display: flex;
     color: black;
     margin-top: 100px;
+    width: 600px;
 }
 
 #pass {
     display: flex;
     color: black;
     margin-top: 100px;
+    width: 600px;
 }
 
 #namebox {
