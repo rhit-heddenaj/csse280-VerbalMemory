@@ -1,37 +1,103 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
 <html>
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Verbal Memory Test</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="icon" type="image/x-icon" href="favicon.ico">
-        <base href="/">
-        <link rel="stylesheet" href="styles/start.css">
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>Verbal Memory Game</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="./styles/start.css" />
     </head>
     <body>
-        <div id="container">
-            <h1>Verbal Memory Test</h1>
-            <br>
-            <div id="desc">
-                <h2>How it works</h2>
-                <p>You will be shown a series of words. If the current word has appeared in this session, 
-                    click the button “SEEN” for an extra point. If you have not seen the word in this session, 
-                    click the button “NEW” for an extra point. After three mistakes, 
-                    the game is over and your score is saved.</p>
-            </div>
+        <div id="app"></div>
 
-            <div id="buttons">
-                <button id="start" class="button">Start</button>
-            </div>
-        </div>
-        
-        
-        <script src="scripts/start.js" async defer></script>
+        <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+        <script type="text/babel">
+            const app = document.getElementById("app");
+            const root = ReactDOM.createRoot(app);
+
+            function HomePage({ onStart }) {
+                return (
+                    <div>
+                        <h1>Verbal Memory Test</h1>
+                        <br />
+                        <div id="desc">
+                            <h2>How it works</h2>
+                            <p>
+                                You will be shown a series of words. If the current word has appeared in this session,
+                                click the button “SEEN” for an extra point. If you have not seen the word in this
+                                session, click the button “NEW” for an extra point. After three mistakes, the game is
+                                over and your score is saved.
+                            </p>
+                        </div>
+                        <div id="buttons">
+                            <button onClick={onStart} className="button">Start</button>
+                        </div>
+                    </div>
+                );
+            }
+
+            function Game({ word, lives, score, onAction }) {
+                return (
+                    <div className="App">
+                        <h1>Verbal Memory Test</h1>
+                        <div id="info">
+                            <h2>Lives: {lives}</h2>
+                            <h2>Score: {score}</h2>
+                        </div>
+                        <h2 id="word">{word}</h2>
+                        <div id="buttons">
+                            <button onClick={() => onAction("new")} className="button">NEW</button>
+                            <button onClick={() => onAction("seen")} className="button">SEEN</button>
+                        </div>
+                    </div>
+                );
+            }
+
+            function App() {
+                const [isGameStarted, setGameStarted] = React.useState(false);
+                const [word, setWord] = React.useState("");
+                const [lives, setLives] = React.useState(3);
+                const [score, setScore] = React.useState(0);
+
+                const startGame = () => {
+                    fetch("/api/words")
+                        .then((response) => response.json())
+                        .then((data) => {
+                            setWord(data.word);
+                            setLives(data.lives);
+                            setScore(data.score);
+                            setGameStarted(true);
+                            location.href = "play.html"
+                        })
+                        .catch((error) => console.error("Error starting game:", error));
+                };
+
+                // const handleAction = (action) => {
+                //     fetch("/api/words", {
+                //         method: "POST",
+                //         headers: { "Content-Type": "application/json" },
+                //         body: JSON.stringify({ action, word }),
+                //     })
+                //         .then((response) => response.json())
+                //         .then((data) => {
+                //             setWord(data.word);
+                //             setLives(data.lives);
+                //             setScore(data.score);
+                //         })
+                //         .catch((error) => console.error("Error performing action:", error));
+                // };
+
+                return (
+                    <div className="App">
+                            <HomePage onStart={startGame} />
+                    </div>
+                );
+            }
+
+            root.render(<App />);
+        </script>
     </body>
 </html>
