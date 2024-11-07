@@ -5,7 +5,10 @@ import pickledb
 import json
 import random
 
+UPLOAD_FOLDER = 'templates/images'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app = Flask(__name__ , static_url_path="", static_folder="templates")
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # By Thursday
     # Leaderboard, profile picture
@@ -91,6 +94,11 @@ list3_name = "name_scores"
 if not db3.get(list3_name):
     db3.lcreate(list3_name)
 
+db4 = pickledb.load("profilepics.db", True)
+list4_name = "name_image"
+if not db4.get(list4_name):
+    db4.lcreate(list4_name)
+
 
 @app.route("/", methods=["GET"])
 def startGame():
@@ -106,6 +114,7 @@ def upload_word():
     global score
     global seen_words
     global username
+    # global image
     if request.method == 'POST':
 
         action = request.form.get("action")
@@ -163,13 +172,16 @@ def upload_word():
         try:
             username = request.args.get("username")
             password = request.args.get("password")
+
         except("TypeError"):
             print("same username: " + str(username))
         if (username not in db2.lgetall(list2_name)):
             db2.ladd(list2_name, username)
             db3.ladd(list3_name, username)
+            # db4.ladd(list4_name, username)
             db2.set(username, password)
             db3.set(username, 0)
+            # db4.set(username, image_name)
         else:
             print("User already in db")
         rando = random.randint(0, len(possible_words) - 1)

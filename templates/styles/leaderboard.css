@@ -50,6 +50,7 @@ td {
 #cont {
     background-color: #800000;
     color: white;
-    width: 130px;
-    height: 35px;
+    width: 200px;
+    height: 70px;
+    font-size: 30px;
 }

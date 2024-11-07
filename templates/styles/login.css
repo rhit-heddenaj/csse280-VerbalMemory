@@ -16,6 +16,18 @@ h1 {
     color: white;
 }
 
+#image {
+    margin-top: 100px;
+    display: flex;
+    align-items: center;
+}
+
+#file {
+    width: 200px;
+    margin-left: 150px;
+}
+
+
 #name{
     display: flex;
     color: black;
@@ -30,12 +42,19 @@ h1 {
     width: 600px;
 }
 
+
+
 #namebox {
     margin: 15px;
     width: 200px;
 }
 
 #passbox {
+    margin: 15px;
+    width: 200px;
+}
+
+#passbox2 {
     margin: 15px;
     width: 200px;
 }
@@ -48,8 +67,8 @@ h1 {
 #continue {
     background-color: #800000;
     color: white;
-    margin-top: 80px;
-    width: 150px;
-    height: 50px;
-    font-size: 25px;
+    margin-top: 100px;
+    width: 200px;
+    height: 70px;
+    font-size: 30px;
 }
