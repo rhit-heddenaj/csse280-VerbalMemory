@@ -116,7 +116,6 @@ def upload_word():
     global username
     # global image
     if request.method == 'POST':
-
         action = request.form.get("action")
         lastWord = request.form.get("word")
         if (lastWord in seen_words and action=="new"):
@@ -173,24 +172,25 @@ def upload_word():
             username = request.args.get("username")
             password = request.args.get("password")
 
-        except("TypeError"):
-            print("same username: " + str(username))
-        if (username not in db2.lgetall(list2_name)):
-            db2.ladd(list2_name, username)
-            db3.ladd(list3_name, username)
-            # db4.ladd(list4_name, username)
-            db2.set(username, password)
-            db3.set(username, 0)
-            # db4.set(username, image_name)
-        else:
-            print("User already in db")
-        rando = random.randint(0, len(possible_words) - 1)
-        word = possible_words[rando]
-        response = {
-            "word": word,
-            "lives": lives,
-            "score": score
-        }
+        
+            if (username not in db2.lgetall(list2_name)):
+                db2.ladd(list2_name, username)
+                db3.ladd(list3_name, username)
+                # db4.ladd(list4_name, username)
+                db2.set(username, password)
+                db3.set(username, 0)
+                # db4.set(username, image_name)
+            else:
+                print("User already in db")
+            rando = random.randint(0, len(possible_words) - 1)
+            word = possible_words[rando]
+            response = {
+                "word": word,
+                "lives": lives,
+                "score": score
+            }
+        except("TypeEror"):
+            print("OKIE")
         return render_template("play.html", response=response)
 
 
