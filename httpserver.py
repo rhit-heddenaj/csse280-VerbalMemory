@@ -105,7 +105,7 @@ def startGame():
     lives = 3
     score = 0
     seen_words =[]
-    return render_template("start.html")  # Got from in class lab
+    return render_template("login.html")  # Got from in class lab
 
 
 @app.route('/words/', methods=['GET', 'POST'])
@@ -176,10 +176,8 @@ def upload_word():
             if (username not in db2.lgetall(list2_name)):
                 db2.ladd(list2_name, username)
                 db3.ladd(list3_name, username)
-                # db4.ladd(list4_name, username)
                 db2.set(username, password)
                 db3.set(username, 0)
-                # db4.set(username, image_name)
             else:
                 print("User already in db")
             rando = random.randint(0, len(possible_words) - 1)
