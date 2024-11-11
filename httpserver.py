@@ -11,10 +11,10 @@ app = Flask(__name__ , static_url_path="", static_folder="templates")
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # By Thursday
-    # Leaderboard, profile picture
+    # DONE! Leaderboard
     # Figure out what do with React
-    # Log in page (username, password, optional profile picture)
-    # possible words db, seen words db, username-to-(password & pfp) db
+    # DONE! Log in page (username, password)
+    # DONE! possible words db, seen words db, username-to-password db
     # (extra) More leaderboard, update the page whenever you pass someone else's high score
     #       (i.e "You have beaten Jack's high score of 18!"" When you get a score of 19)
     # (extra) Logo
@@ -94,19 +94,18 @@ list3_name = "name_scores"
 if not db3.get(list3_name):
     db3.lcreate(list3_name)
 
-db4 = pickledb.load("profilepics.db", True)
-list4_name = "name_image"
-if not db4.get(list4_name):
-    db4.lcreate(list4_name)
-
 
 @app.route("/", methods=["GET"])
 def startGame():
     lives = 3
     score = 0
     seen_words =[]
-    return render_template("login.html")  # Got from in class lab
+    return send_from_directory(app.static_folder, "start.html") # Got from in class labs
 
+@app.route("/login/", methods=["GET"])
+def login():
+    print("YIPPEE")
+    return send_from_directory(app.static_folder, "login.html")
 
 @app.route('/words/', methods=['GET', 'POST'])
 def upload_word():
@@ -167,7 +166,7 @@ def upload_word():
             seen_words.append(lastWord)
         
         return render_template("play.html", response=response)
-    else:
+    elif (request.method=="GET"):
         try:
             username = request.args.get("username")
             password = request.args.get("password")
@@ -189,7 +188,7 @@ def upload_word():
             }
         except("TypeEror"):
             print("OKIE")
-        return render_template("play.html", response=response)
+        return send_from_directory("play.html", response=response)
 
 
     

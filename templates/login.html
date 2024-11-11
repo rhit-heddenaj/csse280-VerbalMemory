@@ -13,39 +13,68 @@
         <link rel="stylesheet" href="styles/login.css">
     </head>
     <body>
-        <form method="GET" action="/words/">
-            <h1>Verbal Memory Login Page</h1>
-            <br>
-            <div id="name">
-                <h2><label for username>Enter your Username:</label></h2>
-                <input id="namebox" name="username" placeholder="Enter your name" minlength = "3" maxlength="20" required>
-            </div>
-
-            <div id="pass">
-                <h2><label for password>Enter your Password:</label></h2>
-                <input id="passbox" name="password" placeholder="Enter your password" minlength="7" maxlength="20" required>
-            </div>
-
-            <div id="pass">
-                <h2><label for password>Confirm Password:</label></h2>
-                <input id="passbox2" name="password" placeholder="Confirm Password" minlength="7" maxlength="20" required>
-            </div>
-
-            
-
-            <div id="image">
-                <h2><label for="file">(Optional) Select a profile picture: </label></h2>
-                <input type="file" name="file" id="file">
-            </div>
-
-            <div id="button">
-                <button type="submit" id="continue">Continue</button>
-            </div>
-        </form>
+            <div id="app"></div>
         
-        <script src="scripts/login.js" async defer></script>
+            <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+            <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+            <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+            <form method="GET" action="/words/">
+                <script type="text/babel">
+                    const app = document.getElementById("app");
+                    const root = ReactDOM.createRoot(app);
+
+                    function Login({onStart}) {
+                    return (
+                        <form method="GET" action="/words/">
+                            <h1>Verbal Memory Login Page</h1>
+                            <div id="name">
+                                <h2><label for username>Enter your Username:</label></h2>
+                                <input id="namebox" name="username" placeholder="Enter your name" minlength = "3" maxlength="20" required />
+                            </div>
+
+                            <div id="pass">
+                                <h2><label for password>Enter your Password:</label></h2>
+                                <input id="passbox" name="password" placeholder="Enter your password" minlength="7" maxlength="20" required />
+                            </div>
+
+                            <div id="pass">
+                                <h2><label for password>Confirm Password:</label></h2>
+                                <input id="passbox2" name="password" placeholder="Confirm Password" minlength="7" maxlength="20" required />
+                            </div>
+
+                            <div id="button">
+                                <button type="submit" id="continue">Continue</button>
+                            </div>
+                        </form>
+                        );
+                    }
+
+                function App() {
+                const [isLogin, setLogin] = React.useState(false);
+
+                const loadLogin = () => {
+                    fetch("/api/words")
+                        .then((response) => response.json())
+                        .then((data) => {
+                            setLogin(true);
+                        })
+                        .catch((error) => console.error("Error logging in game:", error));
+                };
+
+                return (
+                    <div className="App">
+                            <Login onStart={loadLogin} />
+                    </div>
+                );
+            }
+
+                root.render(<App />);
+                </script>
+            </form>
+            
     </body>
 </html>
+
 
 
 

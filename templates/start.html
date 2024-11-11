@@ -32,7 +32,7 @@
                                 over and your score is saved.
                             </p>
                         </div>
-                        <form method="GET" action="/words/">
+                        <form method="GET" action="/login/">
                             <div id="buttons">
                                 <button type = "submit" onClick={onStart} className="button">Start</button>
                             </div>
@@ -59,6 +59,7 @@
                 );
             }
 
+
             function App() {
                 const [isGameStarted, setGameStarted] = React.useState(false);
                 const [word, setWord] = React.useState("");
@@ -73,25 +74,9 @@
                             setLives(data.lives);
                             setScore(data.score);
                             setGameStarted(true);
-                            location.href = "play.html"
                         })
                         .catch((error) => console.error("Error starting game:", error));
                 };
-
-                // const handleAction = (action) => {
-                //     fetch("/api/words", {
-                //         method: "POST",
-                //         headers: { "Content-Type": "application/json" },
-                //         body: JSON.stringify({ action, word }),
-                //     })
-                //         .then((response) => response.json())
-                //         .then((data) => {
-                //             setWord(data.word);
-                //             setLives(data.lives);
-                //             setScore(data.score);
-                //         })
-                //         .catch((error) => console.error("Error performing action:", error));
-                // };
 
                 return (
                     <div className="App">
