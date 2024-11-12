@@ -1,4 +1,4 @@
-from flask import Flask, flash, request, redirect, url_for, render_template, Response, send_from_directory
+from flask import Flask, flash, jsonify, request, redirect, url_for, render_template, Response, send_from_directory
 from werkzeug.utils import secure_filename
 import os
 import pickledb
@@ -107,6 +107,26 @@ def login():
     print("YIPPEE")
     return send_from_directory(app.static_folder, "login.html")
 
+@app.route("/words/", methods=["FIRST"])
+def first_word():
+    rando = random.randint(0, len(possible_words) - 1)
+    word = possible_words[rando]
+    response = jsonify({
+                "word": word,
+                "lives": lives,
+                "score": score
+        })
+
+    response = json.dumps(response)
+
+    return Response(
+            response=response,
+            status=200,
+            headers = {
+                "Content-Type" : "application/json"
+            }
+        )
+
 @app.route('/words/', methods=['GET', 'POST'])
 def upload_word():
     global lives  # Declare as global to modify them if needed, got from https://www.w3schools.com/python/python_variables_global.asp
@@ -179,23 +199,11 @@ def upload_word():
                 db3.set(username, 0)
             else:
                 print("User already in db")
-            rando = random.randint(0, len(possible_words) - 1)
-            word = possible_words[rando]
-            response = {
-                "word": word,
-                "lives": lives,
-                "score": score
-            }
+            
         except("TypeEror"):
             print("OKIE")
         return send_from_directory(app.static_folder, "play.html")
-        # return Response(
-        #     response=response,
-        #     status=200,
-        #     headers = {
-        #         "Content-Type" : "application/json"
-        #     }
-        # )
+        
 
 
     

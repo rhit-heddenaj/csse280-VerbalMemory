@@ -1,16 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verbal Memory Game</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <base href="/">
     <link rel="stylesheet" href="./styles/play.css">
 </head>
-
 <body>
-
     <div id="app"></div>
 
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -22,64 +19,77 @@
         const root = ReactDOM.createRoot(app);
 
         function Game({ word, lives, score, onAction }) {
-                return (
-                    <div className="App">
-                        <h1>Verbal Memory Test</h1>
-                        <div id="info">
-                            <h2>Lives: {lives}</h2>
-                            <h2>Score: {score}</h2>
-                        </div>
-                        <h2 id="word">{word}</h2>
-                        <div id="buttons">
-                            <button onClick={() => onAction("new")} className="button">NEW</button>
-                            <button onClick={() => onAction("seen")} className="button">SEEN</button>
-                        </div>
-                    </div>                   
-                );
-            }
-
-            function App() {
-                const [word, setWord] = React.useState("");
-                const [lives, setLives] = React.useState(3);
-                const [score, setScore] = React.useState(0);
-
-                const playGame = () => {
-                    fetch("/api/words")
-                        .then((response) => response.json())
-                        .then((data) => {
-                            setWord(data.word);
-                            setLives(data.lives);
-                            setScore(data.score);
-                        })
-                        .catch((error) => console.error("Error getting words:", error));
-                };
-
-                return (
-                    <div className="App">
-                            <Game onStart={playGame} />
+            return (
+                <div className="App">
+                    <h1>Verbal Memory Test</h1>
+                    <div id="info">
+                        <h2>Lives: {lives}</h2>
+                        <h2>Score: {score}</h2>
                     </div>
-                );
+                    <h2 id="word">{word}</h2>
+                    <div id="buttons">
+                        <button onClick={() => onAction("new")} className="button">NEW</button>
 
-                root.render(<App />);
+                        <button onClick={() => onAction("seen")} className="button">SEEN</button>
+                    </div>
+                </div>
+            );
+        }
 
-            }
+        async function App() {
+            let response = await fetch("/words/")
+            const data = response.json();
+            const [word, setWord] = React.useState("");
+            const [lives, setLives] = React.useState(3);
+            const [score, setScore] = React.useState(0);
+
+            const fetchGameState = () => {
+
+                setWord(response.word);
+                setLives(response.lives);
+                setScore(response.score);
+
+                // fetch("/words/")  // Fetch current word, lives, score from Flask
+                //     .then((response) => response.json())
+                //     .then((data) => {
+                //         setWord(data.word);
+                //         setLives(data.lives);
+                //         setScore(data.score);
+                //     })
+                //     .catch((error) => console.error("Error fetching game state:", error));
+            };
+
+            const handleAction = (action) => {
+                const formData = new FormData();
+                formData.append("action", action);
+                formData.append("word", word);  
+
+                fetch("/words/", {
+                    method: "POST",
+                    body: formData,
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        setWord(data.word);
+                        setLives(data.lives);
+                        setScore(data.score);
+                    })
+                    .catch((error) => console.error("Error updating game state:", error));
+            };
+
+            React.useEffect(() => {
+                fetchGameState();
+            }, []);
+
+            return (
+                <div className="App">
+                    <Game word={word} lives={lives} score={score} onAction={handleAction} />
+                </div>
+            );
+        }
+
+        root.render(<App />);
     </script>
 
-    <!-- <div id="container">
-        <h1>Verbal Memory Test</h1>
-        <div id="info">
-            <h2>Lives: {{ response.lives }}</h2>
-            <h2>Score: {{ response.score }}</h2>
-        </div>
-        <form method="POST" action="/words/" enctype="multipart/form-data">
-            <h2 id="word">{{ response.word }}</h2>
-            <input type="hidden" name="word" value="{{ response.word }}">
-            <div id="buttons">
-                <button type="submit" id="new" class="button" name="action" value="new">NEW</button>
-                <button type="submit" id="seen" class="button" name="action" value="seen">SEEN</button>
-            </div>
-        </form>
-    </div> -->
-    <script src="scripts/play.js" async defer></script>
 </body>
 </html>
