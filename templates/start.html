@@ -42,37 +42,17 @@
                 );
             }
 
-            function Game({ word, lives, score, onAction }) {
-                return (
-                    <div className="App">
-                        <h1>Verbal Memory Test</h1>
-                        <div id="info">
-                            <h2>Lives: {lives}</h2>
-                            <h2>Score: {score}</h2>
-                        </div>
-                        <h2 id="word">{word}</h2>
-                        <div id="buttons">
-                            <button onClick={() => onAction("new")} className="button">NEW</button>
-                            <button onClick={() => onAction("seen")} className="button">SEEN</button>
-                        </div>
-                    </div>                   
-                );
-            }
+            
 
 
             function App() {
                 const [isGameStarted, setGameStarted] = React.useState(false);
-                const [word, setWord] = React.useState("");
-                const [lives, setLives] = React.useState(3);
-                const [score, setScore] = React.useState(0);
+                
 
                 const startGame = () => {
                     fetch("/api/words")
                         .then((response) => response.json())
                         .then((data) => {
-                            setWord(data.word);
-                            setLives(data.lives);
-                            setScore(data.score);
                             setGameStarted(true);
                         })
                         .catch((error) => console.error("Error starting game:", error));

@@ -6,11 +6,66 @@
     <title>Verbal Memory Game</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <base href="/">
-    <link rel="stylesheet" href="styles/play.css">
+    <link rel="stylesheet" href="./styles/play.css">
 </head>
 
 <body>
-    <div id="container">
+
+    <div id="app"></div>
+
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+        const app = document.getElementById("app");
+        const root = ReactDOM.createRoot(app);
+
+        function Game({ word, lives, score, onAction }) {
+                return (
+                    <div className="App">
+                        <h1>Verbal Memory Test</h1>
+                        <div id="info">
+                            <h2>Lives: {lives}</h2>
+                            <h2>Score: {score}</h2>
+                        </div>
+                        <h2 id="word">{word}</h2>
+                        <div id="buttons">
+                            <button onClick={() => onAction("new")} className="button">NEW</button>
+                            <button onClick={() => onAction("seen")} className="button">SEEN</button>
+                        </div>
+                    </div>                   
+                );
+            }
+
+            function App() {
+                const [word, setWord] = React.useState("");
+                const [lives, setLives] = React.useState(3);
+                const [score, setScore] = React.useState(0);
+
+                const playGame = () => {
+                    fetch("/api/words")
+                        .then((response) => response.json())
+                        .then((data) => {
+                            setWord(data.word);
+                            setLives(data.lives);
+                            setScore(data.score);
+                        })
+                        .catch((error) => console.error("Error getting words:", error));
+                };
+
+                return (
+                    <div className="App">
+                            <Game onStart={playGame} />
+                    </div>
+                );
+
+                root.render(<App />);
+
+            }
+    </script>
+
+    <!-- <div id="container">
         <h1>Verbal Memory Test</h1>
         <div id="info">
             <h2>Lives: {{ response.lives }}</h2>
@@ -24,7 +79,7 @@
                 <button type="submit" id="seen" class="button" name="action" value="seen">SEEN</button>
             </div>
         </form>
-    </div>
+    </div> -->
     <script src="scripts/play.js" async defer></script>
 </body>
 </html>

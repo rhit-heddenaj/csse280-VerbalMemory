@@ -188,7 +188,14 @@ def upload_word():
             }
         except("TypeEror"):
             print("OKIE")
-        return send_from_directory("play.html", response=response)
+        return send_from_directory(app.static_folder, "play.html")
+        # return Response(
+        #     response=response,
+        #     status=200,
+        #     headers = {
+        #         "Content-Type" : "application/json"
+        #     }
+        # )
 
 
     
