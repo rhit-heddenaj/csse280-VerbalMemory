@@ -104,39 +104,35 @@ def startGame():
 
 @app.route("/login/", methods=["GET"])
 def login():
-    print("YIPPEE")
     return send_from_directory(app.static_folder, "login.html")
 
-@app.route("/words/", methods=["FIRST"])
-def first_word():
-    rando = random.randint(0, len(possible_words) - 1)
-    word = possible_words[rando]
-    response = jsonify({
-                "word": word,
-                "lives": lives,
-                "score": score
-        })
+@app.route("/login/", methods=["POST"])
+def user_data():
+    global username
+    username = request.form.get("username")
+    password = request.form.get("password")
+        
+    if (username not in db2.lgetall(list2_name)):
+        db2.ladd(list2_name, username)
+        db3.ladd(list3_name, username)
+        db2.set(username, password)
+        db3.set(username, 0)
+    else:
+        print("User already in db")
+    return send_from_directory(app.static_folder, "play.html")
 
-    response = json.dumps(response)
-
-    return Response(
-            response=response,
-            status=200,
-            headers = {
-                "Content-Type" : "application/json"
-            }
-        )
+    
 
 @app.route('/words/', methods=['GET', 'POST'])
 def upload_word():
     global lives  # Declare as global to modify them if needed, got from https://www.w3schools.com/python/python_variables_global.asp
     global score
     global seen_words
-    global username
     # global image
     if request.method == 'POST':
         action = request.form.get("action")
         lastWord = request.form.get("word")
+        # print("action: " + str(action) + " " + str(lastWord))
         if (lastWord in seen_words and action=="new"):
             lives -= 1
         elif (lastWord in seen_words and action=="seen"):
@@ -147,6 +143,8 @@ def upload_word():
             lives -= 1
         rando = random.randint(0, len(possible_words) - 1)
         rando2 = 0
+        print("lives: " + str(lives))
+        print("score: " + str(score))
         if (len(seen_words) > 2):
             rando2 = random.uniform(0, 1)   # Got random.uniform from https://stackoverflow.com/questions/6088077/how-to-get-a-random-number-between-a-float-range
         if (len(seen_words) > 10):
@@ -176,33 +174,44 @@ def upload_word():
             print("sorted users: " + str(sorted_user_scores))
             return render_template("leaderboard.html", response = sorted_user_scores[0:5])
 
-        response = {
-            "word": word,
-            "lives": lives,
-            "score": score
-        }
 
         if (lastWord not in seen_words):
             seen_words.append(lastWord)
-        
-        return render_template("play.html", response=response)
-    elif (request.method=="GET"):
-        try:
-            username = request.args.get("username")
-            password = request.args.get("password")
+        response = []
+        response.append({
+            "word": word,
+            "lives": lives,
+            "score": score
+        })
+        response = json.dumps(response)
+        return Response(
+            response = response,
+            status = 200,
+            headers = {
+                "Content-Type": "application/json"
+            }
+        )
 
-        
-            if (username not in db2.lgetall(list2_name)):
-                db2.ladd(list2_name, username)
-                db3.ladd(list3_name, username)
-                db2.set(username, password)
-                db3.set(username, 0)
-            else:
-                print("User already in db")
+        # return render_template("play.html", response=response)
+    elif (request.method=="GET"):
+        rando = random.randint(0, len(possible_words) - 1)
+    word = possible_words[rando]
+    response = []
+    response.append({
+        "word": word,
+        "lives": lives,
+        "score": score
+    })
+    response = json.dumps(response)
+
+    return Response(
+            response=response,
+            status=200,
+            headers = {
+                "Content-Type" : "application/json"
+            }
+        )
             
-        except("TypeEror"):
-            print("OKIE")
-        return send_from_directory(app.static_folder, "play.html")
         
 
 

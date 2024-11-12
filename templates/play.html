@@ -17,7 +17,7 @@
     <script type="text/babel">
         const app = document.getElementById("app");
         const root = ReactDOM.createRoot(app);
-
+    
         function Game({ word, lives, score, onAction }) {
             return (
                 <div className="App">
@@ -29,67 +29,72 @@
                     <h2 id="word">{word}</h2>
                     <div id="buttons">
                         <button onClick={() => onAction("new")} className="button">NEW</button>
-
                         <button onClick={() => onAction("seen")} className="button">SEEN</button>
                     </div>
                 </div>
             );
         }
-
-        async function App() {
-            let response = await fetch("/words/")
-            const data = response.json();
+    
+        function App() {
             const [word, setWord] = React.useState("");
             const [lives, setLives] = React.useState(3);
             const [score, setScore] = React.useState(0);
-
-            const fetchGameState = () => {
-
-                setWord(response.word);
-                setLives(response.lives);
-                setScore(response.score);
-
-                // fetch("/words/")  // Fetch current word, lives, score from Flask
-                //     .then((response) => response.json())
-                //     .then((data) => {
-                //         setWord(data.word);
-                //         setLives(data.lives);
-                //         setScore(data.score);
-                //     })
-                //     .catch((error) => console.error("Error fetching game state:", error));
-            };
-
+            const [isPlaying, setPlay] = React.useState(false);
+    
+            React.useEffect(() => {            // https://react.dev/reference/react/useEffect
+                const fetchGameState = async () => {        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function
+                    try {
+                        const response = await fetch('/words/');
+                        const data = await response.json();
+                        if (data && data.length > 0) {
+                            setWord(data[0].word);
+                            setLives(data[0].lives);
+                            setScore(data[0].score);
+                        }
+                    } catch (error) {
+                        console.error("Error fetching game state:", error);
+                    }
+                };
+                fetchGameState();
+            }, []); 
+    
             const handleAction = (action) => {
                 const formData = new FormData();
                 formData.append("action", action);
-                formData.append("word", word);  
-
+                formData.append("word", word);
+    
                 fetch("/words/", {
                     method: "POST",
                     body: formData,
                 })
                     .then((response) => response.json())
                     .then((data) => {
-                        setWord(data.word);
-                        setLives(data.lives);
-                        setScore(data.score);
+                        if (data && data.length > 0) {
+                            setWord(data[0].word);
+                            setLives(data[0].lives);
+                            setScore(data[0].score);
+                        }
                     })
                     .catch((error) => console.error("Error updating game state:", error));
             };
-
-            React.useEffect(() => {
-                fetchGameState();
-            }, []);
-
+    
             return (
                 <div className="App">
-                    <Game word={word} lives={lives} score={score} onAction={handleAction} />
+                    {(
+                        <Game
+                            word={word}
+                            lives={lives}
+                            score={score}
+                            onAction={handleAction}
+                        />
+                    )}
                 </div>
             );
         }
-
+    
         root.render(<App />);
     </script>
+    
 
 </body>
 </html>

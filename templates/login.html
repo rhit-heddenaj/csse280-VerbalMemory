@@ -26,7 +26,7 @@
 
                     function Login({onStart}) {
                     return (
-                        <form method="GET" action="/words/">
+                        <form method="POST" action="/login/">
                             <h1>Verbal Memory Login Page</h1>
                             <div id="name">
                                 <h2><label for username>Enter your Username:</label></h2>
@@ -54,12 +54,7 @@
                 const [isLogin, setLogin] = React.useState(false);
 
                 const loadLogin = () => {
-                    fetch("/api/words")
-                        .then((response) => response.json())
-                        .then((data) => {
-                            setLogin(true);
-                        })
-                        .catch((error) => console.error("Error logging in game:", error));
+                    setLogin(true)
                 };
 
                 return (
