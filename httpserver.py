@@ -167,9 +167,24 @@ def show_words():
         
 @app.route("/leaderboard/")
 def end_game():
-    
+    global lives, score, seen_words
 
-    return flask.send_from_directory(app.static_folder, 'leaderboard.html')
+    if(score > leaderboard_db.get(username)):
+        leaderboard_db.set(username, score)
+
+    users_to_scores = {}
+    keys = leaderboard_db.getall()
+    for key in keys:
+        users_to_scores[key] = leaderboard_db.get(key)
+
+    users_to_scores = sorted(users_to_scores.items(), key = lambda x: x[1], reverse=True)
+
+    lives = 3
+    score = 0
+    seen_words = []
+
+    return render_template("leaderboard.html", response=users_to_scores[0:5])
+ 
    
 if __name__ == "__main__":
     app.run(port=8080, debug=True)
