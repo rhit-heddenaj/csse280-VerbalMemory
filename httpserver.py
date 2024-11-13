@@ -1,4 +1,5 @@
 from flask import Flask, flash, jsonify, request, redirect, url_for, render_template, Response, send_from_directory
+import flask
 from werkzeug.utils import secure_filename
 import os
 import pickledb
@@ -75,14 +76,9 @@ possible_words = [
 ]
 
 
-seen_words =[]
+seen_words = []
 lives = 3
 score = 0
-
-# db1 = pickledb.load("possible_words.db", True)
-# list1_name = "possible_words"
-# if not db1.get(list1_name):
-#     db1.lcreate(list1_name)
 
 db2 = pickledb.load("passwords.db", True)
 list2_name = "all_players"
@@ -97,10 +93,7 @@ if not db3.get(list3_name):
 
 @app.route("/", methods=["GET"])
 def startGame():
-    lives = 3
-    score = 0
-    seen_words =[]
-    return send_from_directory(app.static_folder, "start.html") # Got from in class labs
+    return flask.send_from_directory(app.static_folder, "start.html") # Got from in class labs
 
 @app.route("/login/", methods=["GET"])
 def login():
@@ -122,99 +115,68 @@ def user_data():
     return send_from_directory(app.static_folder, "play.html")
 
     
-
-@app.route('/words/', methods=['GET', 'POST'])
-def upload_word():
-    global lives  # Declare as global to modify them if needed, got from https://www.w3schools.com/python/python_variables_global.asp
-    global score
-    global seen_words
-    # global image
+@app.route('/words/', methods=["GET", "POST"])
+def show_words():
+    global lives, score, seen_words
     if request.method == 'POST':
         action = request.form.get("action")
         lastWord = request.form.get("word")
-        # print("action: " + str(action) + " " + str(lastWord))
-        if (lastWord in seen_words and action=="new"):
-            lives -= 1
-        elif (lastWord in seen_words and action=="seen"):
-            score += 1
-        elif (lastWord not in seen_words and action =="new"):
-            score += 1
-        elif (lastWord not in seen_words and action =="seen"):
-            lives -= 1
-        rando = random.randint(0, len(possible_words) - 1)
-        rando2 = 0
-        print("lives: " + str(lives))
-        print("score: " + str(score))
-        if (len(seen_words) > 2):
-            rando2 = random.uniform(0, 1)   # Got random.uniform from https://stackoverflow.com/questions/6088077/how-to-get-a-random-number-between-a-float-range
-        if (len(seen_words) > 10):
-            rando2 = random.uniform(0.5, 1)
-        if (rando2 > 0.75):
-            rando3 = random.randint(0, len(seen_words) -1)
-            word = seen_words[rando3]
-        else:
-            word = possible_words[rando]
-
-        if (lives == 0):
-            if (score > db3.get(username)):
-                db3.set(username, score)
+        
+        if(lastWord in seen_words):
+            if(action == "new"):
+                lives -=1
+                if lives == 0:
+                    return redirect("/leaderboard/")
+            elif(action == "seen"):
+                score += 1
+        else: #if lastWord is not in seen_words
+            if(action == "new"):
+                score += 1
+                seen_words.append(lastWord)
+                possible_words.remove(lastWord)
+            else:
+                lives -=1
+                if lives == 0:
+                    return redirect("/leaderboard/")
                 
-                
-            lives = 3
-            score = 0
-            seen_words =[]
-
-            user_to_scores = {}
-            users = db3.lgetall(list3_name)
-            for user in users:
-                user_to_scores[user] = db3.get(user)
-            
-            sorted_user_scores = sorted(user_to_scores.items(), key=lambda x: x[1], reverse=True)   # Referenced https://www.geeksforgeeks.org/python-sorted-function/ to sort
-
-            print("sorted users: " + str(sorted_user_scores))
-            return render_template("leaderboard.html", response = sorted_user_scores[0:5])
-
-
-        if (lastWord not in seen_words):
-            seen_words.append(lastWord)
+        #Chance is 75/25 whether seen or new until seen_words is larger than 10 words then it is 50/50
+        newWord = ""
+        if len(seen_words) > 10:
+            if(random.random() < 0.5):
+                index = random.randint(0, len(seen_words) - 1)
+                newWord = seen_words[index]
+            else:
+                index = random.randint(0, len(possible_words) - 1)
+                newWord = possible_words[index]
+        else: 
+            if(random.random() < 0.25):
+                index = random.randint(0, len(seen_words) - 1)
+                newWord = seen_words[index]
+            else:
+                index = random.randint(0, len(possible_words) - 1)
+                newWord = possible_words[index]
         response = []
         response.append({
-            "word": word,
+            "word": newWord,
             "lives": lives,
             "score": score
         })
-        response = json.dumps(response)
-        return Response(
-            response = response,
-            status = 200,
-            headers = {
-                "Content-Type": "application/json"
-            }
-        )
+        return jsonify(response)
+    else:
+        randomIndex = random.randint(0, len(possible_words) - 1)
+        newWord = possible_words[randomIndex]
+        response = []
+        response.append({
+            "word": newWord,
+            "lives": lives,
+            "score": score
+        })
+        return jsonify(response)
 
-        # return render_template("play.html", response=response)
-    elif (request.method=="GET"):
-        rando = random.randint(0, len(possible_words) - 1)
-    word = possible_words[rando]
-    response = []
-    response.append({
-        "word": word,
-        "lives": lives,
-        "score": score
-    })
-    response = json.dumps(response)
-
-    return Response(
-            response=response,
-            status=200,
-            headers = {
-                "Content-Type" : "application/json"
-            }
-        )
-            
         
-
-
-    
+@app.route("/leaderboard/")
+def end_game():
+    return flask.send_from_directory(app.static_folder, 'leaderboard.html')
+   
 if __name__ == "__main__":
     app.run(port=8080, debug=True)
