@@ -1,9 +1,7 @@
 from flask import Flask, flash, jsonify, request, redirect, url_for, render_template, Response, send_from_directory
 import flask
 from werkzeug.utils import secure_filename
-import os
 import pickledb
-import json
 import random
 
 UPLOAD_FOLDER = 'templates/images'
@@ -80,15 +78,11 @@ seen_words = []
 lives = 3
 score = 0
 
-db2 = pickledb.load("passwords.db", True)
-list2_name = "all_players"
-if not db2.get(list2_name):
-    db2.lcreate(list2_name)
+username = ""
 
-db3 = pickledb.load("leaderboard.db", True)
-list3_name = "name_scores"
-if not db3.get(list3_name):
-    db3.lcreate(list3_name)
+username_db = pickledb.load("passwords.db", True)
+leaderboard_db = pickledb.load("leaderboard.db", True)
+
 
 
 @app.route("/", methods=["GET"])
@@ -97,7 +91,7 @@ def startGame():
 
 @app.route("/login/", methods=["GET"])
 def login():
-    return send_from_directory(app.static_folder, "login.html")
+    return flask.send_from_directory(app.static_folder, "login.html")
 
 @app.route("/login/", methods=["POST"])
 def user_data():
@@ -105,13 +99,10 @@ def user_data():
     username = request.form.get("username")
     password = request.form.get("password")
         
-    if (username not in db2.lgetall(list2_name)):
-        db2.ladd(list2_name, username)
-        db3.ladd(list3_name, username)
-        db2.set(username, password)
-        db3.set(username, 0)
-    else:
-        print("User already in db")
+    if (username not in username_db.getall()):
+        username_db.set(username, password)
+        leaderboard_db.set(username, 0)
+
     return send_from_directory(app.static_folder, "play.html")
 
     
@@ -176,6 +167,8 @@ def show_words():
         
 @app.route("/leaderboard/")
 def end_game():
+    
+
     return flask.send_from_directory(app.static_folder, 'leaderboard.html')
    
 if __name__ == "__main__":
