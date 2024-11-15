@@ -26,7 +26,7 @@
 
                     function Login({onStart}) {
                     return (
-                        <form method="POST" action="/login/">
+                        <form id="loginForm" method="POST" action="/login/">
                             <h1>Verbal Memory Login Page</h1>
                             <div id="name">
                                 <h2><label for username>Enter your Username:</label></h2>
@@ -56,6 +56,26 @@
                 const loadLogin = () => {
                     setLogin(true)
                 };
+                
+                React.useEffect(() => {
+                    const logForm = document.getElementById("loginForm");
+                    logForm.addEventListener("submit", function(event) {
+                        const pass1 = document.getElementById("passbox").value;
+                        const pass2 = document.getElementById("passbox2").value;
+
+                        let re = /\w+\d+\W+/
+                        if (!(re.test(pass1))) {
+                            window.alert("Password is invalid! Must include at least a character, a digit, and a special character");
+                            event.preventDefault();
+                        }   
+
+                        if (pass1 != pass2) {
+                            window.alert("Passwords do not match!");
+                            event.preventDefault();
+                        }
+                    })
+                }, [])
+                
 
                 return (
                     <div className="App">

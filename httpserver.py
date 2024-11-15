@@ -78,6 +78,7 @@ seen_words = []
 lives = 3
 score = 0
 
+
 username = ""
 
 username_db = pickledb.load("passwords.db", True)
