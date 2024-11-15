@@ -45,6 +45,10 @@ h1 {
     margin: 0 30px;
 }
 
+.button:hover {
+    background-color: #b22222;
+}
+
 #word {
     display: flex;
     align-items: center;

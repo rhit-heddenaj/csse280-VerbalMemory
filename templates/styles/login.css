@@ -1,74 +1,100 @@
+
 body {
-    background-color: lightgray;
-}
-
-h1 { 
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    margin: 0px;
-    right: 0px;
-    text-align: left; 
-    background-color: #800000; 
-    font-size: 36px; 
-    padding: 16px; 
-    width: 100%; 
-    color: white;
-}
-
-#image {
-    margin-top: 100px;
-    display: flex;
-    align-items: center;
-}
-
-#file {
-    width: 200px;
-    margin-left: 150px;
-}
-
-
-#name{
-    display: flex;
-    color: black;
-    margin-top: 100px;
-    width: 600px;
-}
-
-#pass {
-    display: flex;
-    color: black;
-    margin-top: 100px;
-    width: 600px;
-}
-
-
-
-#namebox {
-    margin: 15px;
-    width: 200px;
-}
-
-#passbox {
-    margin: 15px;
-    width: 200px;
-}
-
-#passbox2 {
-    margin: 15px;
-    width: 200px;
-}
-
-#button {
+    background-color: #f2f2f2; 
+    font-family: 'Arial', sans-serif;
     display: flex;
     justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.App {
+    background-color: #fff;
+    padding: 40px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    width: 350px;
+    max-width: 90%;
+}
+
+h1 {
+    font-size: 28px;
+    text-align: center;
+    background-color: #800000; 
+    color: white;
+    padding: 20px;
+    margin: -40px -40px 30px -40px;
+    border-radius: 10px 10px 0 0;
+}
+
+#name, #pass {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+input {
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+input:focus {
+    border-color: #800000;
+    outline: none;
 }
 
 #continue {
-    background-color: #800000;
+    background-color: #800000; 
     color: white;
-    margin-top: 100px;
-    width: 200px;
-    height: 70px;
-    font-size: 30px;
+    width: 100%;
+    padding: 16px;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-sizing: border-box;
+}
+
+
+#continue:hover {
+    background-color: #B22222; 
+}
+
+
+.alert {
+    color: #ff0000;
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+
+@media (max-width: 600px) {
+    .App {
+        width: 90%;
+        padding: 30px;
+    }
+    h1 {
+        font-size: 24px;
+    }
+    input {
+        padding: 10px;
+    }
+    #continue {
+        padding: 14px;
+        font-size: 16px;
+    }
 }

@@ -47,6 +47,10 @@ td {
     justify-content: center;
 }
 
+#btn:hover {
+    background-color: #b22222;
+}
+
 #cont {
     background-color: #800000;
     color: white;
