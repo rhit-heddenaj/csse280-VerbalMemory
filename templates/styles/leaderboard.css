@@ -47,14 +47,14 @@ td {
     justify-content: center;
 }
 
-#btn:hover {
-    background-color: #b22222;
-}
-
 #cont {
     background-color: #800000;
     color: white;
     width: 200px;
     height: 70px;
     font-size: 30px;
+}
+
+#cont:hover {
+    background-color: #b22222;
 }

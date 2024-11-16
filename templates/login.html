@@ -1,8 +1,4 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
 <html>
     <head>
         <meta charset="utf-8">
@@ -14,83 +10,116 @@
         <link rel="stylesheet" href="./styles/login.css">
     </head>
     <body>
-            <div id="app"></div>
+        <div id="app"></div>
         
-            <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-            <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-            <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-            <form method="GET" action="/words/">
-                <script type="text/babel">
-                    const app = document.getElementById("app");
-                    const root = ReactDOM.createRoot(app);
+        <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+        
+        <script type="text/babel">
+            const app = document.getElementById("app");
+            const root = ReactDOM.createRoot(app);
 
-                    function Login({onStart}) {
-                    return (
-                        <form id="loginForm" method="POST" action="/login/">
-                            <h1>Verbal Memory Login Page</h1>
-                            <div id="name">
-                                <h2><label for username>Enter your Username:</label></h2>
-                                <input id="namebox" name="username" placeholder="Enter your name" minlength = "3" maxlength="20" required />
-                            </div>
+            function Login() {
+                const [username, setUsername] = React.useState("");
+                const [password, setPassword] = React.useState("");
+                const [confirmPassword, setConfirmPassword] = React.useState("");
+                const [errorMessage, setErrorMessage] = React.useState("");
 
-                            <div id="pass">
-                                <h2><label for password>Enter your Password:</label></h2>
-                                <input id="passbox" name="password" placeholder="Enter your password" minlength="7" maxlength="20" required />
-                            </div>
+                const handleSubmit = async (e) => {
+                    e.preventDefault();
 
-                            <div id="pass">
-                                <h2><label for password>Confirm Password:</label></h2>
-                                <input id="passbox2" name="password" placeholder="Confirm Password" minlength="7" maxlength="20" required />
-                            </div>
-
-                            <div id="button">
-                                <button type="submit" id="continue">Continue</button>
-                            </div>
-                        </form>
-                        );
+                    let re = /\w+\d+\W+/;
+                    if (!(re.test(password))) {
+                        setErrorMessage("Password is invalid! Must include at least a character, a digit, and a special character.");
+                        return;
                     }
 
-                function App() {
-                const [isLogin, setLogin] = React.useState(false);
+                    if (password !== confirmPassword) {
+                        setErrorMessage("Passwords do not match!");
+                        return;
+                    }
 
-                const loadLogin = () => {
-                    setLogin(true)
+                    const response = await fetch('/login/', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username, password }),
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        window.location.href = "play.html";
+                    } else {
+                        setErrorMessage(data.message);
+                    }
                 };
-                
-                React.useEffect(() => {
-                    const logForm = document.getElementById("loginForm");
-                    logForm.addEventListener("submit", function(event) {
-                        const pass1 = document.getElementById("passbox").value;
-                        const pass2 = document.getElementById("passbox2").value;
-
-                        let re = /\w+\d+\W+/
-                        if (!(re.test(pass1))) {
-                            window.alert("Password is invalid! Must include at least a character, a digit, and a special character");
-                            event.preventDefault();
-                        }   
-
-                        if (pass1 != pass2) {
-                            window.alert("Passwords do not match!");
-                            event.preventDefault();
-                        }
-                    })
-                }, [])
-                
 
                 return (
+                    <form id="loginForm" onSubmit={handleSubmit}>
+                        <h1>Verbal Memory Login Page</h1>
+                        <div id="name">
+                            <h2><label htmlFor="username">Enter your Username:</label></h2>
+                            <input
+                                id="namebox"
+                                name="username"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                placeholder="Enter your name"
+                                minLength="3"
+                                maxLength="20"
+                                required
+                            />
+                        </div>
+
+                        <div id="pass">
+                            <h2><label htmlFor="password">Enter your Password:</label></h2>
+                            <input
+                                id="passbox"
+                                name="password"
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                placeholder="Enter your password"
+                                minLength="7"
+                                maxLength="20"
+                                required
+                            />
+                        </div>
+
+                        <div id="pass">
+                            <h2><label htmlFor="confirmPassword">Confirm Password:</label></h2>
+                            <input
+                                id="passbox2"
+                                name="confirmPassword"
+                                type="password"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                placeholder="Confirm Password"
+                                minLength="7"
+                                maxLength="20"
+                                required
+                            />
+                        </div>
+
+                        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+
+                        <div id="button">
+                            <button type="submit" id="continue">Continue</button>
+                        </div>
+                    </form>
+                );
+            }
+
+            function App() {
+                return (
                     <div className="App">
-                            <Login onStart={loadLogin} />
+                        <Login />
                     </div>
                 );
             }
 
-                root.render(<App />);
-                </script>
-            </form>
-            
+            root.render(<App />);
+        </script>
     </body>
 </html>
-
-
-
-

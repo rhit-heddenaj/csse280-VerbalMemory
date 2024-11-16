@@ -94,17 +94,41 @@ def startGame():
 def login():
     return flask.send_from_directory(app.static_folder, "login.html")
 
+# @app.route("/logInfo", methods=["GET"])
+# def get_pass():
+#     data = request.get_json()
+#     currUser = data.get("username")
+#     currPass = data.get("password")
+
+#     if (currUser not in username_db.getall()):
+#         return jsonify({"success": True})
+#     else:
+#         stored_pass = username_db.get(currUser)
+#         if (stored_pass != currPass):
+#             return jsonify({"success": False})
+#         else:
+#             return jsonify({"success": True})
+
+
 @app.route("/login/", methods=["POST"])
 def user_data():
     global username
-    username = request.form.get("username")
-    password = request.form.get("password")
-        
-    if (username not in username_db.getall()):
+    data = request.get_json() 
+    username = data.get("username")
+    password = data.get("password")
+    
+    if username not in username_db.getall():
         username_db.set(username, password)
         leaderboard_db.set(username, 0)
+        return jsonify({"success": True, "message": "Account created successfully."})
+    else:
+        stored_password = username_db.get(username)
+        
+        if stored_password == password:
+            return jsonify({"success": True, "message": "Login successful."})
+        else:
+            return jsonify({"success": False, "message": "Invalid username or password."})
 
-    return send_from_directory(app.static_folder, "play.html")
 
     
 @app.route('/words/', methods=["GET", "POST"])
@@ -166,6 +190,7 @@ def show_words():
         return jsonify(response)
 
         
+
 @app.route("/leaderboard/")
 def end_game():
     global lives, score, seen_words
