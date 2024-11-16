@@ -54,3 +54,7 @@ p {
     -ms-border-radius: 5px;
     -o-border-radius: 5px;
 }
+
+.button:hover {
+    background-color: #b22222;
+}

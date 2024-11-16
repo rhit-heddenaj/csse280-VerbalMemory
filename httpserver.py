@@ -172,6 +172,9 @@ def show_words():
                 index = random.randint(0, len(possible_words) - 1)
                 newWord = possible_words[index]
         response = []
+        if (newWord == lastWord):
+            print("same as last word, get new word")
+            newWord = possible_words[index]
         response.append({
             "word": newWord,
             "lives": lives,
