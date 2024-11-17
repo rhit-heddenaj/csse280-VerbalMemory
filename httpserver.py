@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request, redirect, render_template
 import flask
 import pickledb
 import random
+import os
 
 UPLOAD_FOLDER = 'templates/images'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -214,6 +215,10 @@ def end_game():
 
     return render_template("leaderboard.html", response=users_to_scores[0:5])
  
+@app.get("/shutdown")
+def shutdown():
+    print("Shutting down the server")
+    os._exit(0)
    
 if __name__ == "__main__":
-    app.run(port=8080, debug=True)
+    app.run(host='0.0.0.0', port=22041, debug=True)
