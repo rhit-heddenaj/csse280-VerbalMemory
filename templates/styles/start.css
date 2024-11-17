@@ -1,3 +1,4 @@
+/* Default styles for larger screens */
 body {
     background-color: lightgray;
 }
@@ -18,8 +19,8 @@ h1 {
 
 #desc {
     margin-top: 200px;
-    right:0px;
-    left:0px;
+    right: 0px;
+    left: 0px;
     position: absolute;
     padding-left: 25px;
     padding-right: 25px;
@@ -39,6 +40,7 @@ p {
     display: flex; 
     align-items: center; 
     justify-content: space-evenly;
+    margin-top: 50px; /* Adjust space for larger screens */
 }
 
 .button {
@@ -48,7 +50,7 @@ p {
     height: 70px;
     color: white;
     width: 200px;
-    margin-top: 600px;
+    margin-top: 50px; /* Adjust space for larger screens */
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     -ms-border-radius: 5px;
@@ -57,4 +59,51 @@ p {
 
 .button:hover {
     background-color: #b22222;
+}
+
+/* Mobile-specific styles */
+@media screen and (max-width: 768px) {
+    h1 {
+        font-size: 28px; /* Smaller font size for smaller screens */
+        padding: 12px; /* Less padding for header */
+        text-align: center; /* Center-align the text */
+    }
+
+    #desc {
+        margin-top: 150px; /* Adjust margin to fit on smaller screens */
+        padding-left: 15px; /* Less padding */
+        padding-right: 15px; /* Less padding */
+    }
+
+    h2 {
+        font-size: 18px; /* Adjust font size of h2 */
+    }
+
+    p {
+        font-size: 18px; /* Adjust font size of paragraph */
+    }
+
+    #buttons {
+        flex-direction: column; /* Stack buttons vertically */
+        margin-top: 30px; /* Reduce space above the buttons */
+    }
+
+    .button {
+        width: 80%; /* Make buttons take up more width on small screens */
+        margin-top: 20px; /* Less margin between buttons */
+        font-size: 24px; /* Smaller font size */
+        height: 60px; /* Smaller button height */
+    }
+}
+
+/* Further adjustments for very small devices (portrait phones) */
+@media screen and (max-width: 480px) {
+    h1 {
+        font-size: 24px; /* Even smaller font size for very small screens */
+    }
+
+    .button {
+        font-size: 20px; /* Smaller font size for buttons */
+        height: 50px; /* Further reduce button height */
+    }
 }

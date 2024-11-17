@@ -18,10 +18,16 @@
         const app = document.getElementById("app");
         const root = ReactDOM.createRoot(app);
     
-        function Game({ word, lives, score, onAction }) {
+        function Game({ word, lives, score, onAction, personalBest, overallBest, topPlayer }) {
             return (
                 <div className="App">
                     <h1>Verbal Memory Test</h1>
+                    <div id="best">
+                        <h2>Personal Best: {personalBest} </h2>
+                        <h2>Best Score: {overallBest} </h2>
+                        <h2>Top Player: {topPlayer} </h2>
+                    </div>
+                    
                     <div id="info">
                         <h2>Lives: {lives}</h2>
                         <h2>Score: {score}</h2>
@@ -39,6 +45,9 @@
             const [word, setWord] = React.useState("");
             const [lives, setLives] = React.useState(3);
             const [score, setScore] = React.useState(0);
+            const [personalBest, setBest] = React.useState(0);
+            const [overallBest, setOverall] = React.useState(0);
+            const [topPlayer, setPlayer] = React.useState("")
             const [isPlaying, setPlay] = React.useState(false);
     
             React.useEffect(() => {            // https://react.dev/reference/react/useEffect
@@ -50,6 +59,9 @@
                             setWord(data[0].word);
                             setLives(data[0].lives);
                             setScore(data[0].score);
+                            setBest(data[0].personalBest);
+                            setOverall(data[0].overallBest);
+                            setPlayer(data[0].topPlayer);
                         }
                     } catch (error) {
                         console.error("Error fetching game state:", error);
@@ -79,6 +91,9 @@
                             setWord(data[0].word);
                             setLives(data[0].lives);
                             setScore(data[0].score);
+                            setBest(data[0].personalBest);
+                            setOverall(data[0].overallBest);
+                            setPlayer(data[0].topPlayer);
                         }
                     })
                     .catch((error) => console.error("Error updating game state:", error));
@@ -92,6 +107,9 @@
                             lives={lives}
                             score={score}
                             onAction={handleAction}
+                            personalBest = {personalBest}
+                            overallBest = {overallBest}
+                            topPlayer = {topPlayer}
                         />
                     )}
                 </div>

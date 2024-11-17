@@ -113,9 +113,12 @@ def login():
 @app.route("/login/", methods=["POST"])
 def user_data():
     global username
+    global personalBest
     data = request.get_json() 
     username = data.get("username")
     password = data.get("password")
+    personalBest = leaderboard_db.get(username)
+    
     
     if username not in username_db.getall():
         username_db.set(username, password)
@@ -129,11 +132,19 @@ def user_data():
         else:
             return jsonify({"success": False, "message": "Invalid username or password."})
 
-
     
 @app.route('/words/', methods=["GET", "POST"])
 def show_words():
-    global lives, score, seen_words
+    global lives, score, seen_words, personalBest, overallBest, topPlayer
+
+    users_to_scores = {}
+    keys = leaderboard_db.getall()
+    for key in keys:
+        users_to_scores[key] = leaderboard_db.get(key)
+
+    users_to_scores = sorted(users_to_scores.items(), key = lambda x: x[1], reverse=True)
+    topPlayer, overallBest = users_to_scores[0]
+
     if request.method == 'POST':
         action = request.form.get("action")
         lastWord = request.form.get("word")
@@ -145,9 +156,13 @@ def show_words():
                     return redirect("/leaderboard/")
             elif(action == "seen"):
                 score += 1
+                if (score > personalBest):
+                    personalBest = score
         else: #if lastWord is not in seen_words
             if(action == "new"):
                 score += 1
+                if (score > personalBest):
+                    personalBest = score
                 seen_words.append(lastWord)
                 possible_words.remove(lastWord)
             else:
@@ -157,6 +172,7 @@ def show_words():
                 
         #Chance is 75/25 whether seen or new until seen_words is larger than 10 words then it is 50/50
         newWord = ""
+        
         if len(seen_words) > 10:
             if(random.random() < 0.5):
                 index = random.randint(0, len(seen_words) - 1)
@@ -175,10 +191,15 @@ def show_words():
         if (newWord == lastWord):
             print("same as last word, get new word")
             newWord = possible_words[index]
+        if (personalBest > overallBest):
+            overallBest=personalBest
         response.append({
             "word": newWord,
             "lives": lives,
-            "score": score
+            "score": score,
+            "personalBest": personalBest,
+            "overallBest": overallBest,
+            "topPlayer": topPlayer
         })
         return jsonify(response)
     else:
@@ -188,7 +209,10 @@ def show_words():
         response.append({
             "word": newWord,
             "lives": lives,
-            "score": score
+            "score": score,
+            "personalBest": personalBest,
+            "overallBest": overallBest,
+            "topPlayer":topPlayer
         })
         return jsonify(response)
 
