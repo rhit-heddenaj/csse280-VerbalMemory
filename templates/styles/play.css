@@ -26,7 +26,7 @@ h1 {
     right: 0;
     text-align: left;
     background-color: #800000;
-    font-size: 2.5rem; 
+    font-size: 36px;
     padding: 1rem;
 }
 
@@ -72,29 +72,9 @@ h1 {
     flex-wrap: wrap;
     color: black;
     justify-content: space-evenly;
-    gap: 20px; 
-    font-size: 2rem; 
-    margin-top: 3rem;
+    gap: 60px; 
+    font-size: 1rem; 
     width: 100%;
-}
-
-#best h2 {
-    flex: 1;
-    text-align: center;
-    margin: 5px;
-}
-
-
-@media (max-width: 768px) {
-    #best {
-        font-size: 1.5rem; 
-        flex-direction: column; 
-        align-items: center; 
-    }
-
-    #best h2 {
-        min-width: 100%;
-    }
 }
 
 
@@ -112,11 +92,17 @@ h1 {
 
 @media (max-width: 768px) {
     h1 {
-        font-size: 2rem; 
+        font-size: 24px; 
         padding: 1rem;
     }
 
-    #info, #best {
+    #best {
+        font-size: 1rem; 
+        flex-direction: column; 
+        align-items: center; 
+    }
+
+    #info {
         font-size: 1.5rem; 
         flex-direction: column; 
         gap: 10px;
@@ -129,11 +115,11 @@ h1 {
 
     .button {
         width: 80%; 
-        font-size: 1.25rem;
+        font-size: 1.5rem;
     }
 
     #word {
-        font-size: 2.5rem; 
+        font-size: 2rem; 
         padding: 1rem 2rem; 
     }
 }
@@ -141,19 +127,20 @@ h1 {
 
 @media (min-width: 1024px) {
     h1 {
-        font-size: 3rem; 
+        font-size: 36px; 
+        padding: 16px;
     }
 
-    #info, #best {
-        font-size: 2.5rem; 
+    #info {
+        font-size: 2rem; 
     }
 
     .button {
         width: 250px; 
-        font-size: 1.75rem;
+        font-size: 2rem;
     }
 
     #word {
-        font-size: 4rem; 
+        font-size: 2.5rem; 
     }
 }
