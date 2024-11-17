@@ -1,6 +1,5 @@
-from flask import Flask, flash, jsonify, request, redirect, url_for, render_template, Response, send_from_directory
+from flask import Flask, jsonify, request, redirect, render_template
 import flask
-from werkzeug.utils import secure_filename
 import pickledb
 import random
 
@@ -9,15 +8,7 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app = Flask(__name__ , static_url_path="", static_folder="templates")
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-# By Thursday
-    # DONE! Leaderboard
-    # Figure out what do with React
-    # DONE! Log in page (username, password)
-    # DONE! possible words db, seen words db, username-to-password db
-    # (extra) More leaderboard, update the page whenever you pass someone else's high score
-    #       (i.e "You have beaten Jack's high score of 18!"" When you get a score of 19)
-    # (extra) Logo
-
+#Note about the commit history: We consistly pair programmed with AJ Hedden being the driver and Emma Paauwe being the navigator. This is reason for the commit history being lopsided towards AJ. 
 
 possible_words = [
     "abandon", "absorb", "accent", "accordion", "acquire", "address", "adore", "allegro", "amplify", "anchor", 
@@ -85,7 +76,6 @@ username_db = pickledb.load("passwords.db", True)
 leaderboard_db = pickledb.load("leaderboard.db", True)
 
 
-
 @app.route("/", methods=["GET"])
 def startGame():
     return flask.send_from_directory(app.static_folder, "start.html") # Got from in class labs
@@ -93,22 +83,6 @@ def startGame():
 @app.route("/login/", methods=["GET"])
 def login():
     return flask.send_from_directory(app.static_folder, "login.html")
-
-# @app.route("/logInfo", methods=["GET"])
-# def get_pass():
-#     data = request.get_json()
-#     currUser = data.get("username")
-#     currPass = data.get("password")
-
-#     if (currUser not in username_db.getall()):
-#         return jsonify({"success": True})
-#     else:
-#         stored_pass = username_db.get(currUser)
-#         if (stored_pass != currPass):
-#             return jsonify({"success": False})
-#         else:
-#             return jsonify({"success": True})
-
 
 @app.route("/login/", methods=["POST"])
 def user_data():
@@ -135,6 +109,7 @@ def user_data():
     
 @app.route('/words/', methods=["GET", "POST"])
 def show_words():
+    # Declare as global to modify them if needed, got from https://www.w3schools.com/python/python_variables_global.asp
     global lives, score, seen_words, personalBest, overallBest, topPlayer
 
     users_to_scores = {}
@@ -171,6 +146,7 @@ def show_words():
                     return redirect("/leaderboard/")
                 
         #Chance is 75/25 whether seen or new until seen_words is larger than 10 words then it is 50/50
+        #Source for different probabilities: https://stackoverflow.com/questions/3203099/percentage-chance-to-make-action
         newWord = ""
         
         if len(seen_words) > 10:
@@ -189,7 +165,6 @@ def show_words():
                 newWord = possible_words[index]
         response = []
         if (newWord == lastWord):
-            print("same as last word, get new word")
             newWord = possible_words[index]
         if (personalBest > overallBest):
             overallBest=personalBest
@@ -230,6 +205,7 @@ def end_game():
     for key in keys:
         users_to_scores[key] = leaderboard_db.get(key)
 
+    # Referenced https://www.geeksforgeeks.org/python-sorted-function/ to sort
     users_to_scores = sorted(users_to_scores.items(), key = lambda x: x[1], reverse=True)
 
     lives = 3
